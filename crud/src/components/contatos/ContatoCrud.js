@@ -17,6 +17,14 @@ class ContatoCrud extends React.Component {
         this.setState( { status: ETipoAcao.listando } );
     };
 
+    incluir = () => {
+        this.setState({ status: ETipoAcao.incluindo });
+    };
+
+    salvarInclusao = (objeto) => {
+        this.setState({ objetos: [...this.state.objetos, objeto], status: ETipoAcao.listando });
+    };
+
     consultar = (objeto) => {
         this.setState({ objSelecionado: objeto, status: ETipoAcao.consultando });
     };
@@ -43,14 +51,34 @@ class ContatoCrud extends React.Component {
         this.setState({ objetos: objetos, status: ETipoAcao.listando});
     };
 
+    deletar = (id) => {
+        const objetos = this.state.objetos;
+        let indice = -1;
+
+        for(let i=0; i < objetos.length; i++){
+            if( objetos[i].ContatoId === id ) {
+                indice = i;
+            }
+        }
+
+        if( indice >= 0 ) {
+            objetos.splice(indice, 1);
+        }
+
+        this.setState({ objetos: objetos });
+    };
+
     renderComponent() {
         if(this.state.status === ETipoAcao.listando) {
             return(
                 <div>
-                    <button className="tiny ui green button">Incluir</button>
-                    <ContatoLista objetos={this.state.objetos} consultar={this.consultar} alterar={this.alterar}/>
+                    <button onClick={this.incluir} className="tiny ui green button">Incluir</button>
+                    <ContatoLista objetos={this.state.objetos} consultar={this.consultar} alterar={this.alterar} deletar={this.deletar} />
                 </div>
             );
+        }
+        else if(this.state.status === ETipoAcao.incluindo) {
+            return <ContatoAltera salvarAlteracao={this.salvarInclusao} voltar={this.voltar} objeto={{}} />;
         }
         else if(this.state.status === ETipoAcao.consultando) {
             return <ContatoConsulta voltar={this.voltar} objeto={this.state.objSelecionado} />;

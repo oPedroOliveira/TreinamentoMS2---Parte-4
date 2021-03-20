@@ -11,7 +11,7 @@ class ContatoLista extends React.Component {
                         <td>
                             <button onClick={() => this.props.consultar(c)} className="tiny ui orange button">Consultar</button>
                             <button onClick={() => this.props.alterar(c)} className="tiny ui blue button">Alterar</button>
-                            <button className="tiny ui red button">Excluir</button>
+                            <button onClick={() => this.props.deletar(c.ContatoId)} className="tiny ui red button">Excluir</button>
                         </td>
                     </tr>
                 );
