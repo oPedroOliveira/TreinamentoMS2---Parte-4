@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ContatosApplication.Models;
+using ContatosDomain.Models;
 
-namespace ContatosApplication.Data
+namespace ContatosInfraestructure.Data
 {
     public class ContatosApplicationContext : DbContext
     {
@@ -23,6 +23,6 @@ namespace ContatosApplication.Data
                         .OnDelete(DeleteBehavior.Cascade);
         }
 
-        public DbSet<ContatosApplication.Models.Contato> Contato { get; set; }
+        public DbSet<ContatosDomain.Models.Contato> Contato { get; set; }
     }
 }

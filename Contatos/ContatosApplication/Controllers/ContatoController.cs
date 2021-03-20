@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ContatosApplication.Data;
-using ContatosApplication.Models;
+using ContatosInfraestructure.Data;
+using ContatosDomain.Models;
 
 namespace ContatosApplication.Controllers
 {

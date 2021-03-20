@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ContatosApplication.Models
+namespace ContatosDomain.Models
 {
     public enum ETipoNumero
     {

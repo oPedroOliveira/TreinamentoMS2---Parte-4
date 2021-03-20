@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ContatosApplication.Migrations
+namespace ContatosInfraestructure.Migrations
 {
     public partial class InitialVersion : Migration
     {
