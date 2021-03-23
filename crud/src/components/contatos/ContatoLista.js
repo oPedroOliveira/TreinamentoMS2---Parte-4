@@ -5,13 +5,12 @@ class ContatoLista extends React.Component {
         return(
             this.props.objetos.map(c => {
                 return(
-                    <tr key={c.ContatoId}>
-                        <td>{c.Nome}</td>
-                        <td>{c.Numero}</td>
+                    <tr key={c.contatoId}>
+                        <td>{c.nome}</td>
                         <td>
                             <button onClick={() => this.props.consultar(c)} className="tiny ui orange button">Consultar</button>
                             <button onClick={() => this.props.alterar(c)} className="tiny ui blue button">Alterar</button>
-                            <button onClick={() => this.props.deletar(c.ContatoId)} className="tiny ui red button">Excluir</button>
+                            <button onClick={() => this.props.deletar(c.contatoId)} className="tiny ui red button">Excluir</button>
                         </td>
                     </tr>
                 );
@@ -25,7 +24,6 @@ class ContatoLista extends React.Component {
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Numero</th>
                         <th></th>
                     </tr>
                 </thead>

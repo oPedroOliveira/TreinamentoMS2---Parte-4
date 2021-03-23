@@ -1,9 +1,25 @@
 import React from 'react';
+import api from '../../apis';
 
 class ContatoAltera extends React.Component {
     constructor(props) {
         super(props);
-        this.state={ objeto: props.objeto }
+
+        if(props.incluindo) {
+            this.state = { objeto: { nome: "" }, carregando: false };
+        }
+        else {
+            this.state = { objeto: { nome: "" }, carregando: true };
+        }
+    }
+
+    componentDidMount() {
+        if(this.props.incluindo === false) {
+            api.get(`/api/contato/${this.props.id}`)
+            .then(result => {
+                this.setState({ objeto: result.data, carregando: false });
+            });
+        }    
     }
     
     salvar = (e) => {
@@ -17,10 +33,12 @@ class ContatoAltera extends React.Component {
     };
 
     render() {
-        const obj = this.props.objeto;
+        if ( this.state.carregando ) {
+            return <div>Carregando . . .</div>
+        }
 
-        
-        
+        const obj = this.state.objeto;
+
         return(
             <div>
                 <button onClick={() => {this.props.voltar()}} className="tiny ui grey button">Voltar</button>
@@ -28,11 +46,7 @@ class ContatoAltera extends React.Component {
                     <div>
                         <div>
                             <label>Nome</label>
-                            <input onChange={(e) => this.alteraProp("Nome", e.target.value)} value={obj.Nome} type="text" />
-                        </div>
-                        <div>
-                            <label>Número</label>
-                            <input onChange={(e) => this.alteraProp("Numero", e.target.value)} value={obj.Numero} type="text" />
+                            <input onChange={(e) => this.alteraProp("nome", e.target.value)} value={obj.nome} type="text" />
                         </div>
                     </div>
                 </form>

@@ -25,7 +25,7 @@ namespace ContatosApplication.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contato>>> GetContato()
         {
-            return await _context.Contato.ToListAsync();
+            return await _context.Contato.OrderBy(c => c.Nome).ToListAsync();
         }
 
         // GET: api/Contato/5
@@ -82,6 +82,8 @@ namespace ContatosApplication.Controllers
         [HttpPost]
         public async Task<ActionResult<Contato>> PostContato(Contato contato)
         {
+            contato.ContatoId = Guid.NewGuid().ToString();
+
             _context.Contato.Add(contato);
             try
             {

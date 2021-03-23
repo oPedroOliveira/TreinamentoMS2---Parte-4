@@ -2,16 +2,29 @@ import React from 'react';
 import ContatoLista from './ContatoLista';
 import ContatoConsulta from './ContatoConsulta';
 import ContatoAltera from './ContatoAltera';
+import api from "../../apis";
 
 class ContatoCrud extends React.Component {
     constructor(props){
         super(props);
         this.state = { 
-            objetos: contatos, 
+            objetos: [], 
             objSelecionado: null, 
-            status: ETipoAcao.listando
+            status: ETipoAcao.carregando
         };
     }
+
+    componentDidMount() {
+        this.listarDados();
+    }
+
+    listarDados = () => {
+        api.get("/api/contato")
+        .then(result => {
+            //console.log(result.data);
+            this.setState({ objetos: result.data, status: ETipoAcao.listando })
+        });
+    };
 
     voltar = () => {
         this.setState( { status: ETipoAcao.listando } );
@@ -22,7 +35,14 @@ class ContatoCrud extends React.Component {
     };
 
     salvarInclusao = (objeto) => {
-        this.setState({ objetos: [...this.state.objetos, objeto], status: ETipoAcao.listando });
+        api.post("/api/contato", objeto)
+        .then(result => {
+            //console.log(result.status);
+            if(result.status === 201) {
+                this.setState({ status: ETipoAcao.carregando })
+                this.listarDados();
+            }
+        });
     };
 
     consultar = (objeto) => {
@@ -34,38 +54,54 @@ class ContatoCrud extends React.Component {
     };
 
     salvarAlteracao = (objeto) => {
-        let objetoNoVetor = null;
-        const objetos = this.state.objetos;
+        // let objetoNoVetor = null;
+        // const objetos = this.state.objetos;
 
-        for(let i=0; i < objetos.length; i++){
-            if(objetos[i].ContatoId === objeto.ContatoId){
-                objetoNoVetor = objetos[i];
+        // for(let i=0; i < objetos.length; i++){
+        //     if(objetos[i].ContatoId === objeto.ContatoId){
+        //         objetoNoVetor = objetos[i];
+        //     }
+        // }
+
+        // if(objetoNoVetor !== null){
+        //     objetoNoVetor.Nome = objeto.Nome;
+        //     objetoNoVetor.Numero = objeto.Numero;
+        // }
+
+        api.put(`/api/contato/${objeto.contatoId}`, objeto)
+        .then(result => {
+            //console.log(result);
+            if(result.status === 204) {
+                this.setState({ status: ETipoAcao.carregando })
+                this.listarDados();
             }
-        }
-
-        if(objetoNoVetor !== null){
-            objetoNoVetor.Nome = objeto.Nome;
-            objetoNoVetor.Numero = objeto.Numero;
-        }
-
-        this.setState({ objetos: objetos, status: ETipoAcao.listando});
+        });
     };
 
     deletar = (id) => {
-        const objetos = this.state.objetos;
-        let indice = -1;
+        // const objetos = this.state.objetos;
+        // let indice = -1;
 
-        for(let i=0; i < objetos.length; i++){
-            if( objetos[i].ContatoId === id ) {
-                indice = i;
+        // for(let i=0; i < objetos.length; i++){
+        //     if( objetos[i].ContatoId === id ) {
+        //         indice = i;
+        //     }
+        // }
+
+        // if( indice >= 0 ) {
+        //     objetos.splice(indice, 1);
+        // }
+
+        // this.setState({ objetos: objetos });
+
+        api.delete(`/api/contato/${id}`)
+        .then(result => {
+            //console.log(result);
+            if(result.status === 204) {
+                this.setState({ status: ETipoAcao.carregando })
+                this.listarDados();
             }
-        }
-
-        if( indice >= 0 ) {
-            objetos.splice(indice, 1);
-        }
-
-        this.setState({ objetos: objetos });
+        });
     };
 
     renderComponent() {
@@ -78,16 +114,16 @@ class ContatoCrud extends React.Component {
             );
         }
         else if(this.state.status === ETipoAcao.incluindo) {
-            return <ContatoAltera salvarAlteracao={this.salvarInclusao} voltar={this.voltar} objeto={{}} />;
+            return <ContatoAltera incluindo={true} salvarAlteracao={this.salvarInclusao} voltar={this.voltar} />;
         }
         else if(this.state.status === ETipoAcao.consultando) {
-            return <ContatoConsulta voltar={this.voltar} objeto={this.state.objSelecionado} />;
+            return <ContatoConsulta voltar={this.voltar} id={this.state.objSelecionado.contatoId} />;
         }
         else if(this.state.status === ETipoAcao.alterando) {
-            return <ContatoAltera voltar={this.voltar} objeto={this.state.objSelecionado} salvarAlteracao={this.salvarAlteracao} />;
+            return <ContatoAltera incluindo={false} voltar={this.voltar} id={this.state.objSelecionado.contatoId} salvarAlteracao={this.salvarAlteracao} />;
         }
         else {
-            return <div></div>
+            return <div>Carregando. . . </div>
         }
     };
 
@@ -101,11 +137,11 @@ class ContatoCrud extends React.Component {
     }
 }
 
-const contatos = [
-    { ContatoId: 'c1', Nome: 'Jacinda', Numero: '888-8888' },
-    { ContatoId: 'c2', Nome: 'Bejamin', Numero: '777-7777' },
-    { ContatoId: 'c3', Nome: 'Boris', Numero: '333-3333' }
-]
+// const contatos = [
+//     { ContatoId: 'c1', Nome: 'Jacinda', Numero: '888-8888' },
+//     { ContatoId: 'c2', Nome: 'Bejamin', Numero: '777-7777' },
+//     { ContatoId: 'c3', Nome: 'Boris', Numero: '333-3333' }
+// ]
 
 const ETipoAcao = Object.freeze({
     "carregando":1,
